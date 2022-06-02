@@ -68,14 +68,14 @@
 
   - name: Install Kubernetes binaries
     apt: 
-      name: "{{ packages }}"
+      name: "{{ packages + '=' + cluster_kubernetes_version }}"
       state: present
       update_cache: yes
     vars:
       packages:
-        - kubelet="{{ cluster_kubernetes_version }}"
-        - kubeadm="{{ cluster_kubernetes_version }}"
-        - kubectl="{{ cluster_kubernetes_version }}"
+        - kubelet
+        - kubeadm
+        - kubectl
 
   - name: Restart kubelet
     service:
