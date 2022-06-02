@@ -88,5 +88,7 @@
 
   handlers:
     - name: docker status
-      service: name=docker state=started
+      ansible.builtin.service:
+        name: docker
+        state: started
 ---
