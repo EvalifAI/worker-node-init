@@ -68,7 +68,7 @@
 
   - name: Install Kubernetes binaries
     apt: 
-      name: "{{ packages + '=' + cluster_kubernetes_version }}"
+      name: "{{ packages }}={{ cluster_kubernetes_version }}"
       state: present
       update_cache: yes
     vars:
