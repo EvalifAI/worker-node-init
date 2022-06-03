@@ -88,16 +88,15 @@
         "storage-driver": "overlay2"
         }
 
-  - name: Restart services
-    ansible.builtin.service:
-      name: docker
-      daemon_reload: yes
-      state: restarted
-      enabled: true
-    ansible.builtin.service:
-      name: kubelet
-      state: restarted
-      
+  - name: Daemon reload
+    command: systemctl daemon-reload
+
+  - name: Restart docker-ce
+    command: systemctl restart docker
+
+  - name: Enable docker
+    command: systemctl enable docker
+
   - name: Retrieve kubeadm join command
     command: ssh -i /etc/ssh/ssh_host_ecdsa_key -o "StrictHostKeyChecking accept-new" root@"{{ master_node_address }}" "kubeadm token create --print-join-command"
     register: kubeadm_join_command
