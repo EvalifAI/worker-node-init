@@ -77,14 +77,29 @@
         - kubeadm=1.22.7-00
         - kubectl=1.22.7-00
 
+  - name: Update cgroup driver for node
+    copy:
+      dest: "/etc/docker/deamon.json"
+      content: |
+        { "exec-opts": ["native.cgroupdriver=systemd"],
+        "log-driver": "json-file",
+        "log-opts":
+        { "max-size": "100m" },
+        "storage-driver": "overlay2"
+        }
+
   - name: Restart kubelet
     service:
       name: kubelet
       daemon_reload: yes
       state: restarted
 
+  - name: Retrieve kubeadm join command
+    command: ssh -i /etc/ssh/ssh_host_ecdsa_key root@"{{ master_node_address }}" "kubeadm token create --print-join-command"
+    register: kubeadm_join_command
+
   - name: Join the node to cluster
-    command: kubeadm join "{{ master_node_address }}" --token "{{ master_node_token }}" --discovery-token-ca-cert-hash "{{ master_node_discovery_token }}"
+    command: "{{ kubeadm_join_command.stdout }}"
 
   handlers:
     - name: docker status
