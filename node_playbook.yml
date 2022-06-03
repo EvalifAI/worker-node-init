@@ -89,15 +89,15 @@
         }
 
   - name: Restart services
-    service:
-      name: kubelet
+    ansible.builtin.service:
+      name: docker
       daemon_reload: yes
       state: restarted
-    service:
-      name: docker
-      state: restarted
       enabled: true
-
+    ansible.builtin.service:
+      name: kubelet
+      state: restarted
+      
   - name: Retrieve kubeadm join command
     command: ssh -i /etc/ssh/ssh_host_ecdsa_key -o "StrictHostKeyChecking accept-new" root@"{{ master_node_address }}" "kubeadm token create --print-join-command"
     register: kubeadm_join_command
