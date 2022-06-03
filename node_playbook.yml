@@ -54,6 +54,12 @@
     when: ansible_swaptotal_mb > 0
 
 
+  - name: Enable ip forward
+    ansible.posix.sysctl:
+      name: net.ipv4.ip_forward
+      value: '1'
+      sysctl_set: yes
+    command: sysctl -p
 
   - name: Add an apt signing key for Kubernetes
     apt_key:
